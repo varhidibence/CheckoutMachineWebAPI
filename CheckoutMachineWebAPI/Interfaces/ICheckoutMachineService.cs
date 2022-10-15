@@ -10,7 +10,7 @@
     /// Gets the currently stored items in the machine/>
     /// </summary>
     /// <returns>currently stored items/></returns>
-    List<ICurrency> GetStoredItems();
+    Dictionary<string, int> GetStoredItems();
 
     /// <summary>
     /// Pay the price with the given money
@@ -19,5 +19,9 @@
     /// <param name="price">amount of money to be paid</param>
     /// <returns>change given back</returns>
     List<ICurrency> Checkout(KeyValuePair<string, int> inserted, int price);
+
+    void AddCurrency(ITransactionData transactionData);
+
+    bool CheckTransactionData(ITransactionData transactionData);
   }
 }

@@ -13,21 +13,18 @@ namespace CheckoutMachineWebAPI.Controllers
     // GET: api/v1/Stock
     [HttpGet]
     [Route("Stock")]
-    public ActionResult<Dictionary<string, int>>Get([FromServices] ICheckoutMachineService checkoutMachineService)
+    public ActionResult<Dictionary<string, int>> Get([FromServices] ICheckoutMachineService checkoutMachineService)
     {
       try
       {
-        List<ICurrency>? storedItems = checkoutMachineService.GetStoredItems();
+        Dictionary<string, int> storedItems = checkoutMachineService.GetStoredItems();
 
         if (storedItems == null)
         {
           return NotFound();
         }
 
-        var dict = new Dictionary<string, int>();
-        storedItems.ForEach(item => dict.Add(item.Value ?? "", item.Amount));
-
-        return Ok(dict);
+        return Ok(storedItems);
       }
       catch (Exception ex)
       {
@@ -38,8 +35,26 @@ namespace CheckoutMachineWebAPI.Controllers
     // POST api/v1/Stock
     [HttpPost]
     [Route("Stock")]
-    public void PostStock([FromBody] string value)
+    public ActionResult<Dictionary<string, int>> PostStock([FromServices] ICheckoutMachineService checkoutMachineService, 
+      [FromBody] TransactionData transactionData)
     {
+      try
+      {
+        bool correctTransactionData = checkoutMachineService.CheckTransactionData(transactionData);
+
+        if (!correctTransactionData)
+        {
+          return BadRequest();
+        }
+
+        checkoutMachineService.AddCurrency(transactionData);
+        return Ok(checkoutMachineService.GetStoredItems());
+      }
+      catch (Exception)
+      {
+        return BadRequest();
+        throw;
+      }
     }
 
     // POST api/v1/Checkout
