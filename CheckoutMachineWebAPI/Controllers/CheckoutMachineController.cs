@@ -41,8 +41,9 @@ namespace CheckoutMachineWebAPI.Controllers
       try
       {
         bool correctTransactionData = checkoutMachineService.CheckTransactionData(transactionData);
+        bool correctPrice = checkoutMachineService.CheckPriceIsEqual(transactionData);
 
-        if (!correctTransactionData)
+        if (!correctTransactionData || !correctPrice)
         {
           return BadRequest();
         }
@@ -59,8 +60,30 @@ namespace CheckoutMachineWebAPI.Controllers
     // POST api/v1/Checkout
     [HttpPost]
     [Route("Checkout")]
-    public void PostCheckout([FromBody] string value)
+    public ActionResult<Dictionary<string, int>> PostCheckout([FromServices] ICheckoutMachineService checkoutMachineService,
+      [FromBody] TransactionData transactionData)
     {
+      try
+      {
+        bool correctTransactionData = checkoutMachineService.CheckTransactionData(transactionData);
+        bool insertedIsEnough = checkoutMachineService.CheckInsertedIsEnough(transactionData);  
+
+        if (!correctTransactionData)
+        {
+          return BadRequest("Transaction data given is incorrectly formatted!");
+        }
+        
+        if (!insertedIsEnough)
+        {
+          return BadRequest(); // TODO 
+        }
+
+        return Ok(checkoutMachineService.Checkout(transactionData));
+      }
+      catch (Exception)
+      {
+        return BadRequest();
+      }
     }
 
   }

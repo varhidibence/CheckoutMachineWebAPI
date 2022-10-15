@@ -6,7 +6,7 @@ namespace CheckoutMachineWebAPI.Services
 {
   public class CheckoutMachineService : ICheckoutMachineService
   {
-    private List<ICurrency> _currencies = new List<ICurrency>();
+    public List<ICurrency> _currencies = new List<ICurrency>();
 
     private List<string> typesOfCurrency = new List<string>(); // TODO: store ind DB
 
@@ -15,15 +15,6 @@ namespace CheckoutMachineWebAPI.Services
       typesOfCurrency = new List<string>()
       {
         "5", "10", "20", "50", "100", "200", "500", "1000", "2000", "5000", "10000", "20000",
-      };
-    }
-
-    public List<ICurrency> Checkout(KeyValuePair<string, int> inserted, int price)
-    {
-      return new List<ICurrency>()
-      {
-        new Currency { Denomination = "1000", Amount = 2},
-        new Currency { Denomination = "500", Amount = 3},
       };
     }
 
@@ -63,13 +54,78 @@ namespace CheckoutMachineWebAPI.Services
       bool correctTypeOfMoney =  transactionData.Inserted.Keys.All(key => typesOfCurrency.Contains(key));
       bool amountsArePositives = transactionData.Inserted.Values.All(amount => amount > 0);
 
-      return correctTypeOfMoney && amountsArePositives && CheckPrice(transactionData);
+      return correctTypeOfMoney && amountsArePositives;
 
     }
 
-    private bool CheckPrice(ITransactionData transactionData)
+    public bool CheckPriceIsEqual(ITransactionData transactionData)
     {
-      return transactionData.Price == transactionData.Inserted.Select(currency => currency.Value * Int32.Parse(currency.Key)).Sum();
+      return transactionData.Price == SumTransaction(transactionData);
+    }
+
+    public bool CheckInsertedIsEnough(ITransactionData transactionData)
+    {
+      return transactionData.Price <= SumTransaction(transactionData);
+    }
+
+    private static int SumTransaction(ITransactionData transactionData)
+    {
+      return DotProduct(transactionData.Inserted);
+    }
+
+    public static int DotProduct(Dictionary<string, int> inserted)
+    {
+      return inserted.Select(currency => currency.Value * Int32.Parse(currency.Key)).Sum();
+    }
+
+    public Dictionary<string, int> Checkout(ITransactionData transactionData)
+    {
+      var price = transactionData.Price; // 3400 HUF
+      var sumOfGivenMoney = SumTransaction(transactionData); // given money: 4000 HUF
+
+      var difference = sumOfGivenMoney - price; // 600
+
+      if (difference == 0)
+      {
+        return new Dictionary<string, int>();
+      }
+
+      // sorted stored money desc -> {1000 : 1, 500 : 2, 100}
+      List<ICurrency> ordered = _currencies.OrderByDescending(curr => int.Parse(curr.Denomination)).ToList();
+
+      var biggestChange = ordered.FirstOrDefault(storedCurr => int.Parse(storedCurr.Denomination) < difference);
+
+      Dictionary<string, int> changeBack = new Dictionary<string, int>();
+
+      foreach (var currencyInStore in ordered)
+      {
+        
+        if (int.Parse(currencyInStore.Denomination) < difference) // 500 < 900 HUF
+        {
+          if(currencyInStore.Amount > 0)
+          {
+            changeBack.Add(currencyInStore.Denomination, 1);
+          }
+          else
+          {
+            // 500: 0 pc
+          }
+        }
+        else
+        {
+          // 1000 > 900 -> next currency
+        }
+      }
+
+      int sumOfChangeBack = DotProduct(changeBack);
+
+      if (sumOfChangeBack != difference)
+      {
+        throw new Exception("Cannot give properly amount of cashback!");
+      }
+
+      return changeBack;
+
     }
   }
 }

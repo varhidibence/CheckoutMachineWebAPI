@@ -15,10 +15,9 @@
     /// <summary>
     /// Pay the price with the given money
     /// </summary>
-    /// <param name="inserted">amount of money to pay the price with</param>
-    /// <param name="price">amount of money to be paid</param>
+    /// <param name="transactionData">transaction with given money and amount of purchase </param>
     /// <returns>change given back</returns>
-    List<ICurrency> Checkout(KeyValuePair<string, int> inserted, int price);
+    Dictionary<string, int> Checkout(ITransactionData transactionData);
 
     /// <summary>
     /// Add new currency to the machine or increase the amount of existing currency.
@@ -32,5 +31,9 @@
     /// <param name="transactionData"></param>
     /// <returns></returns>
     bool CheckTransactionData(ITransactionData transactionData);
+
+    bool CheckPriceIsEqual(ITransactionData transactionData);
+
+    bool CheckInsertedIsEnough(ITransactionData transactionData);
   }
 }
