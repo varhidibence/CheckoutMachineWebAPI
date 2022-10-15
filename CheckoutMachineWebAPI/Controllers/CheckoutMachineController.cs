@@ -28,7 +28,7 @@ namespace CheckoutMachineWebAPI.Controllers
       }
       catch (Exception ex)
       {
-        return BadRequest(ex.Message);
+        return BadRequest("Exception occured during getting stock process!\n" + ex.Message);
       }
     }
 
@@ -45,15 +45,15 @@ namespace CheckoutMachineWebAPI.Controllers
 
         if (!correctTransactionData || !correctPrice)
         {
-          return BadRequest();
+          return BadRequest("Transaction data given is incorrectly formatted!");
         }
 
         checkoutMachineService.AddCurrency(transactionData);
         return Ok(checkoutMachineService.GetStoredItems());
       }
-      catch (Exception)
+      catch (Exception ex)
       {
-        return BadRequest();
+        return BadRequest("Exception occured during stock money process!\n" + ex.Message);
       }
     }
 
@@ -75,14 +75,14 @@ namespace CheckoutMachineWebAPI.Controllers
         
         if (!insertedIsEnough)
         {
-          return BadRequest(); // TODO 
+          return BadRequest($"Inserted money is not enough to pay the price!\n The price is: {transactionData.Price}.");
         }
 
         return Ok(checkoutMachineService.Checkout(transactionData));
       }
-      catch (Exception)
+      catch (Exception ex)
       {
-        return BadRequest();
+        return BadRequest("Exception occured during checkout process!\n" + ex.Message);
       }
     }
 

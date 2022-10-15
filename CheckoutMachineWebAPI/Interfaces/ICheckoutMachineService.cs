@@ -1,4 +1,6 @@
-﻿namespace CheckoutMachineWebAPI.Interfaces
+﻿using CheckoutMachineWebAPI.Models;
+
+namespace CheckoutMachineWebAPI.Interfaces
 {
   /// <summary>
   /// Interface for checkout and check the stored items.
@@ -17,23 +19,33 @@
     /// </summary>
     /// <param name="transactionData">transaction with given money and amount of purchase </param>
     /// <returns>change given back</returns>
-    Dictionary<string, int> Checkout(ITransactionData transactionData);
+    Dictionary<string, int> Checkout(TransactionData transactionData);
 
     /// <summary>
     /// Add new currency to the machine or increase the amount of existing currency.
     /// </summary>
     /// <param name="transactionData"></param>
-    void AddCurrency(ITransactionData transactionData);
+    void AddCurrency(TransactionData transactionData);
 
     /// <summary>
     /// Checks that the transaction data given is correctly formatted
     /// </summary>
     /// <param name="transactionData"></param>
     /// <returns></returns>
-    bool CheckTransactionData(ITransactionData transactionData);
+    bool CheckTransactionData(TransactionData transactionData);
 
-    bool CheckPriceIsEqual(ITransactionData transactionData);
+    /// <summary>
+    /// Check the price is correct for stock money
+    /// </summary>
+    /// <param name="transactionData">transaction information</param>
+    /// <returns>true, if price is correct</returns>
+    bool CheckPriceIsEqual(TransactionData transactionData);
 
-    bool CheckInsertedIsEnough(ITransactionData transactionData);
+    /// <summary>
+    /// Check whether inserted money is enough to pay the price
+    /// </summary>
+    /// <param name="transactionData">transaction information</param>
+    /// <returns>true, if enough to pay</returns>
+    bool CheckInsertedIsEnough(TransactionData transactionData);
   }
 }
