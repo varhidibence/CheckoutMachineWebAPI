@@ -1,4 +1,5 @@
 ﻿using CheckoutMachineWebAPI.Interfaces;
+using CheckoutMachineWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -12,9 +13,26 @@ namespace CheckoutMachineWebAPI.Controllers
     // GET: api/v1/Stock
     [HttpGet]
     [Route("Stock")]
-    public ActionResult<List<ICurrency>> Get([FromServices] ICheckoutMachineService checkoutMachineService)
+    public ActionResult<Dictionary<string, int>>Get([FromServices] ICheckoutMachineService checkoutMachineService)
     {
-      return checkoutMachineService.GetStoredItems();
+      try
+      {
+        List<ICurrency>? storedItems = checkoutMachineService.GetStoredItems();
+
+        if (storedItems == null)
+        {
+          return NotFound();
+        }
+
+        var dict = new Dictionary<string, int>();
+        storedItems.ForEach(item => dict.Add(item.Value ?? "", item.Amount));
+
+        return Ok(dict);
+      }
+      catch (Exception ex)
+      {
+        return BadRequest(ex.Message);
+      }
     }
 
     // POST api/v1/Stock
