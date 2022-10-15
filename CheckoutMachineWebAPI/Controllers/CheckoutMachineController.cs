@@ -4,40 +4,31 @@
 
 namespace CheckoutMachineWebAPI.Controllers
 {
-  [Route("api/[controller]")]
+  [Route("api/v1/")]
   [ApiController]
   public class CheckoutMachineController : ControllerBase
   {
-    // GET: api/<CheckoutMachineController>
+    // GET: api/v1/Stock
     [HttpGet]
+    [Route("Stock")]
     public IEnumerable<string> Get()
     {
       return new string[] { "value1", "value2" };
     }
 
-    // GET api/<CheckoutMachineController>/5
-    [HttpGet("{id}")]
-    public string Get(int id)
-    {
-      return "value";
-    }
-
-    // POST api/<CheckoutMachineController>
+    // POST api/v1/Stock
     [HttpPost]
-    public void Post([FromBody] string value)
+    [Route("Stock")]
+    public void PostStock([FromBody] string value)
     {
     }
 
-    // PUT api/<CheckoutMachineController>/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
+    // POST api/v1/Checkout
+    [HttpPost]
+    [Route("Checkout")]
+    public void PostCheckout([FromBody] string value)
     {
     }
 
-    // DELETE api/<CheckoutMachineController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
-    {
-    }
   }
 }
