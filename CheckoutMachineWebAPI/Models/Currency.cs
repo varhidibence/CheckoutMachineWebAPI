@@ -4,7 +4,7 @@ namespace CheckoutMachineWebAPI.Models
 {
   public class Currency : ICurrency
   {
-    public string? Value {get; set;}
+    public string Denomination { get; set; } = String.Empty;
 
     public int Amount {get; set;} 
   }

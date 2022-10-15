@@ -53,7 +53,6 @@ namespace CheckoutMachineWebAPI.Controllers
       catch (Exception)
       {
         return BadRequest();
-        throw;
       }
     }
 

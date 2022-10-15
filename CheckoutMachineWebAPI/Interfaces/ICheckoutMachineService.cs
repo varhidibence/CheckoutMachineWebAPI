@@ -20,8 +20,17 @@
     /// <returns>change given back</returns>
     List<ICurrency> Checkout(KeyValuePair<string, int> inserted, int price);
 
+    /// <summary>
+    /// Add new currency to the machine or increase the amount of existing currency.
+    /// </summary>
+    /// <param name="transactionData"></param>
     void AddCurrency(ITransactionData transactionData);
 
+    /// <summary>
+    /// Checks that the transaction data given is correctly formatted
+    /// </summary>
+    /// <param name="transactionData"></param>
+    /// <returns></returns>
     bool CheckTransactionData(ITransactionData transactionData);
   }
 }

@@ -2,7 +2,7 @@
 {
   public interface ICurrency
   {
-    string? Value { get; set; }
+    string Denomination { get; set; }
 
     int Amount { get; set; }
   }
