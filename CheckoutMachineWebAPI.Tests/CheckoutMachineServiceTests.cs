@@ -86,5 +86,32 @@ namespace CheckoutMachineWebAPI.Tests
       // Assert
       Assert.Equal(typeof(Exception), ex.GetType());
     }
+
+    [Fact]
+    public void TestCheckout_ProperCashbackOneItem()
+    {
+      // Arrange
+      CheckoutMachineService service = new CheckoutMachineService();
+      service._currencies.Add(new Currency { Amount = 1, Denomination = "500" });
+
+      var insertedMoney = new Dictionary<string, int>
+      {
+        { "1000", 1 }
+      };
+
+      TransactionData transactionData = new TransactionData()
+      {
+        Inserted = insertedMoney,
+        Price = 500
+      };
+
+
+      // Act
+      var cashBack = service.Checkout(transactionData);
+      var actual = CheckoutMachineService.DotProduct(cashBack);
+
+      // Assert
+      Assert.Equal(500, actual);
+    }
   }
 }

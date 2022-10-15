@@ -100,7 +100,7 @@ namespace CheckoutMachineWebAPI.Services
       foreach (var currencyInStore in ordered)
       {
         
-        if (int.Parse(currencyInStore.Denomination) < difference) // 500 < 900 HUF
+        if (int.Parse(currencyInStore.Denomination) <= difference) // 500 < 900 HUF
         {
           if(currencyInStore.Amount > 0)
           {
@@ -108,7 +108,7 @@ namespace CheckoutMachineWebAPI.Services
           }
           else
           {
-            // 500: 0 pc
+            // 500: 0 pc -> next curr
           }
         }
         else
