@@ -1,17 +1,26 @@
 ﻿using CheckoutMachineWebAPI.Interfaces;
+using CheckoutMachineWebAPI.Models;
 
 namespace CheckoutMachineWebAPI.Services
 {
   public class CheckoutMachineService : ICheckoutMachineService
   {
-    public KeyValuePair<string, int> Checkout(KeyValuePair<string, int> inserted, int price)
+    public List<ICurrency> Checkout(KeyValuePair<string, int> inserted, int price)
     {
-      throw new NotImplementedException();
+      return new List<ICurrency>()
+      {
+        new Currency { Value = "1000", Amount = 2},
+        new Currency { Value = "500", Amount = 3},
+      };
     }
 
-    public KeyValuePair<string, int> GetStoredItems()
+    public List<ICurrency> GetStoredItems()
     {
-      throw new NotImplementedException();
+      return new List<ICurrency>() 
+      { 
+        new Currency { Value = "1000", Amount = 2},
+        new Currency { Value = "500", Amount = 3},
+      };
     }
   }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CheckoutMachineWebAPI.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,9 +12,9 @@ namespace CheckoutMachineWebAPI.Controllers
     // GET: api/v1/Stock
     [HttpGet]
     [Route("Stock")]
-    public IEnumerable<string> Get()
+    public ActionResult<List<ICurrency>> Get([FromServices] ICheckoutMachineService checkoutMachineService)
     {
-      return new string[] { "value1", "value2" };
+      return checkoutMachineService.GetStoredItems();
     }
 
     // POST api/v1/Stock
