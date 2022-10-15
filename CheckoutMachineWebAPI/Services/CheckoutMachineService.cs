@@ -63,8 +63,13 @@ namespace CheckoutMachineWebAPI.Services
       bool correctTypeOfMoney =  transactionData.Inserted.Keys.All(key => typesOfCurrency.Contains(key));
       bool amountsArePositives = transactionData.Inserted.Values.All(amount => amount > 0);
 
-      return correctTypeOfMoney && amountsArePositives;
+      return correctTypeOfMoney && amountsArePositives && CheckPrice(transactionData);
 
+    }
+
+    private bool CheckPrice(ITransactionData transactionData)
+    {
+      return transactionData.Price == transactionData.Inserted.Select(currency => currency.Value * Int32.Parse(currency.Key)).Sum();
     }
   }
 }
